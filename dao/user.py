@@ -19,8 +19,8 @@ class UserDAO:
         else:
             return None
 
-    def create(self, userdata) -> User:
-        new_user = User(**userdata)
+    def create(self, user_data) -> User:
+        new_user = User(**user_data)
         self.session.add(new_user)
         self.session.commit()
         return new_user
