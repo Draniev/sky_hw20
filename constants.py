@@ -6,3 +6,4 @@
 # LOG_DIR = "logs"
 PWD_HASH_SALT = b'Yndn23fnl8wldnd711-djdh4E'
 PWD_HASH_ITERATIONS = 100_000
+JWT_SECRET_KEY = 'SECRETqwe123jhdywna31wDw'
