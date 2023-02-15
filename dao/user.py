@@ -26,7 +26,7 @@ class UserDAO:
         return new_user
 
     def update(self, user: User) -> User:
-        self.session.add(User)
+        self.session.add(user)
         self.session.commit()
         return user
 

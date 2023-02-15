@@ -47,14 +47,14 @@ class UserService:
         user_data['password'] = get_hash(user_data['password'])
         return self.user_dao.create(user_data)
 
-    def update(self, user_data: User) -> User | None:
+    def update(self, user_data: dict) -> User | None:
         user_id = user_data['id']
         user = self.user_dao.get_one(user_id)
         keys_4_update = user_data.keys()
 
         if user:
             if 'username' in keys_4_update:
-                user.username = user_id['username']
+                user.username = user_data['username']
             if 'password' in keys_4_update:
                 # На вход получаем пароль в открытом виде, но сохраняем хэш
                 user.password = get_hash(user_data['password'])
