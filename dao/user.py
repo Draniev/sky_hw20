@@ -14,7 +14,7 @@ class UserDAO:
 
     def get_one_by_username(self, username: str) -> User | None:
         users = self.session.query(User).filter(User.username == username).all()
-        if users(len) == 1:
+        if len(users) == 1:     # Будем считать что имя пользователя у нас уникально (ну а как еще...)
             return users[0]
         else:
             return None
