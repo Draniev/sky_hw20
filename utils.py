@@ -34,7 +34,7 @@ def check_auth(headers: dict) -> dict:
 
     token = headers['Authorization'].split('Bearer ')[-1]
     try:
-        user_auth_data = jwt.decode(token, JWT_SECRET_KEY, algorithms=JWT_TOKEN_ALGORITHM)
+        user_auth_data = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_TOKEN_ALGORITHM])
         return user_auth_data
     except Exception as e:
         abort(401)
