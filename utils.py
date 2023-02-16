@@ -1,6 +1,7 @@
 import hashlib
 import time
 import jwt
+from flask import request, abort
 
 from constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS, JWT_SECRET_KEY, JWT_TOKEN_ALGORITHM, PWD_ALGORITHM
 
@@ -25,3 +26,34 @@ def generate_jwt(user_data: dict) -> dict[str:str]:
     refresh_token = jwt.encode(user_data, JWT_SECRET_KEY, algorithm=JWT_TOKEN_ALGORITHM)
 
     return {'access_token': access_token, 'refresh_token': refresh_token}
+
+
+def check_auth(headers: dict) -> dict:
+    if 'Authorization' not in headers:
+        abort(401)
+
+    token = headers['Authorization'].split('Bearer ')[-1]
+    try:
+        user_auth_data = jwt.decode(token, JWT_SECRET_KEY, algorithms=JWT_TOKEN_ALGORITHM)
+        return user_auth_data
+    except Exception as e:
+        abort(401)
+
+
+def auth_required(func):
+    def wrapper(*args, **kwargs):
+        check_auth(request.headers)
+
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def admin_required(func):
+    def wrapper(*args, **kwargs):
+        user_auth_data = check_auth(request.headers)
+
+        if user_auth_data.get('role') != 'admin':
+            abort(403)
+
+        return func(*args, **kwargs)
+    return wrapper
