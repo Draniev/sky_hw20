@@ -2,6 +2,7 @@ from flask import request
 from flask_restx import Resource, Namespace
 
 from container import movie_service, movie_schema
+from utils import admin_required
 
 movie_ns = Namespace('movies')
 
@@ -15,6 +16,7 @@ class MoviesView(Resource):
         return movie_schema.dump(movies, many=True), 200
 
     # Создание нового
+    @admin_required
     def post(self):
         movie_data = request.json
         movie = movie_service.create(movie_data)
@@ -32,6 +34,7 @@ class MovieView(Resource):
             return "Ошибка, ошибка, хаха", 404
 
     # Изменение одного
+    @admin_required
     def put(self, mid):
         movie_data = request.json
         movie_data['id'] = mid
@@ -42,6 +45,7 @@ class MovieView(Resource):
             return "Нечего тут обновлять!", 404
 
     # Удаление
+    @admin_required
     def delete(self, mid):
         movie = movie_service.delete(mid)
         if movie:

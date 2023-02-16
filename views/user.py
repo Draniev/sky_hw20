@@ -2,6 +2,7 @@ from flask import request
 from flask_restx import Resource, Namespace
 
 from container import user_service, user_schema
+from utils import admin_required
 
 user_ns = Namespace('users')
 
@@ -23,6 +24,7 @@ class UsersView(Resource):
 @user_ns.route('/<int:uid>')
 class UserView(Resource):
     # Отображение данных о пользователе. Для админа
+    @admin_required
     def get(self, uid: int):
         user = user_service.get_one(uid)
         if user:
@@ -31,6 +33,7 @@ class UserView(Resource):
             return "Ошибочка, нет никого", 404
 
     # Обновление данных о пользователе (для админа или для себя лично)
+    @admin_required
     def put(self, uid: int):
         user_data = request.json
         user_data['id'] = uid
@@ -41,6 +44,7 @@ class UserView(Resource):
             return "Отсутствует пользователь для обновления", 404
 
     # Удаление пользователя. Только для админа
+    @admin_required
     def delete(self, uid: int):
         user = user_service.delete(uid)
         if user:
